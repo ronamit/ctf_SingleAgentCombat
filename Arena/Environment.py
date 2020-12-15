@@ -23,7 +23,7 @@ class Environment(object):
         self.SHOW_EVERY = SHOW_EVERY
         self.NUMBER_OF_EPISODES = NUM_OF_EPISODES
 
-	def update_win_counters(self):
+    def update_win_counters(self):
         reward_blue, reward_red = self.handle_reward()
         if reward_blue == WIN_REWARD - self.number_of_steps * MOVE_PENALTY:
             self.wins_for_blue += 1
@@ -32,8 +32,7 @@ class Environment(object):
         else:
             self.tie_count += 1
 
-
-	def handle_reward(self):
+    def handle_reward(self):
         # handle the rewarding
         blue_dominate_red, _ = is_dominating(self.blue_player, self.red_player)
         red_dominate_blue, _ = is_dominating(self.red_player, self.blue_player)
