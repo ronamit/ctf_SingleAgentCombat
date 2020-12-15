@@ -3,7 +3,6 @@ from Arena.constants import np, SIZE_X, SIZE_Y, DSM, AgentAction
 
 
 class Entity:
-
     def __init__(self, decision_maker: AbsDecisionMaker = None):
 
         self._decision_maker = decision_maker
