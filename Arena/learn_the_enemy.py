@@ -94,7 +94,7 @@ if __name__ == '__main__':
     start_time = timeit.default_timer()
 
     agent_name = 'hard'
-    n_samples = 20
+    n_samples = 100
     learn_agent(agent_name, n_samples)
 
     time_str = time.strftime("%H hours, %M minutes and %S seconds",
