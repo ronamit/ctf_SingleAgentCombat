@@ -93,10 +93,10 @@ def learn_agent(agent_name, n_samples = 20):
 if __name__ == '__main__':
     start_time = timeit.default_timer()
 
-    agent_name = 'hard'  # 'easy' | 'medium' | 'hard'
+    agent_name = 'easy'  # 'easy' | 'medium' | 'hard'
     n_samples = 500
     policy_counts = learn_agent(agent_name, n_samples)
 
     time_str = time.strftime("%H hours, %M minutes and %S seconds",
                              time.gmtime(timeit.default_timer() - start_time))
-    print('Finished learning the ', agent_name, ' agent in ', time_str)
+    print('-'*20, '\nFinished learning the ', agent_name, ' agent in ', time_str)
