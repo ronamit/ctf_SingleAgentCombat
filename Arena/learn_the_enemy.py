@@ -7,12 +7,12 @@ from Arena.constants import EASY_AGENT, MEDIUM_AGENT, HARD_AGENT, AgentAction, S
 from Arena.Entity import Entity
 from Arena.CState import State
 import numpy as np
-
-n_actions = 9
 import pickle
-
 #------------------------------------------------------------------------------------------------------------~
 
+
+n_actions = 9
+#------------------------------------------------------------------------------------------------------------~
 
 
 def valid_pos_generator(init_pos=(0, 0)):
@@ -24,6 +24,8 @@ def valid_pos_generator(init_pos=(0, 0)):
         # end for
     # end for
 # end ded
+#------------------------------------------------------------------------------------------------------------~
+
 
 def state_generator():
     # note: to get all states  -go over also the state with swapped blue-red roles
@@ -42,6 +44,17 @@ def update_pol_cnts(state, action, policy_counts):
 # end def
 # ------------------------------------------------------------------------------------------------------------~
 
+
+def set_env_state(env, state):
+    # set  position of the players in the environment
+    # state = (blue_pos, red_pos)
+    env.blue_player.x = state[0]
+    env.blue_player.y = state[1]
+    env.red_player.x = state[2]
+    env.red_player.y = state[3]
+
+
+#------------------------------------------------------------------------------------------------------------~
 
 def learn_agent(agent_name, n_samples = 20):
 
@@ -67,11 +80,8 @@ def learn_agent(agent_name, n_samples = 20):
         state_blue = blue_pos + red_pos  # state_blue=(blue_pos, red_pos)
         state_red = red_pos + blue_pos # state_red=(red_pos, blue_pos) , red see the state the other way around
 
-        # set  position for the players
-        env.blue_player.x = state_blue[0]
-        env.blue_player.y = state_blue[1]
-        env.red_player.x = state_red[0]
-        env.red_player.y = state_red[1]
+        # set  position of the players in the environment
+        set_env_state(env, state_blue)
 
         # get observation
         observation_for_blue: State = env.get_observation_for_blue()
