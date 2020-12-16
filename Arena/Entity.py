@@ -80,22 +80,42 @@ class Entity:
 
     def action(self, a: AgentAction):
 
+
         """9 possible moves!"""
-        if a == AgentAction.TopRight:
+        if a == AgentAction.TopRight:  # (down-left)
             self.move(x=1, y=-1)
-        elif a == AgentAction.Right:
+        elif a == AgentAction.Right:  # (down)
             self.move(x=1, y=0)
-        elif a == AgentAction.BottomRight:
+        elif a == AgentAction.BottomRight:  # (down-right)
             self.move(x=1, y=1)
-        elif a == AgentAction.Bottom:
+        elif a == AgentAction.Bottom:  # (left)
             self.move(x=0, y=-1)
         elif a == AgentAction.Stay:  # stay in place!
             self.move(x=0, y=0)
-        elif a == AgentAction.Top:
+        elif a == AgentAction.Top:  # (right)
             self.move(x=0, y=1)
-        elif a == AgentAction.BottomLeft:
+        elif a == AgentAction.BottomLeft:  # (up-left)
             self.move(x=-1, y=-1)
-        elif a==AgentAction.Left:
+        elif a==AgentAction.Left:  # (up)
             self.move(x=-1, y=0)
-        elif a == AgentAction.TopLeft:
+        elif a == AgentAction.TopLeft:  # (up-right)
             self.move(x=-1, y=1)
+
+        # if a == AgentAction.TopRight:
+        #     self.move(x=1, y=-1)
+        # elif a == AgentAction.Right:
+        #     self.move(x=1, y=0)
+        # elif a == AgentAction.BottomRight:
+        #     self.move(x=1, y=1)
+        # elif a == AgentAction.Bottom:
+        #     self.move(x=0, y=-1)
+        # elif a == AgentAction.Stay:  # stay in place!
+        #     self.move(x=0, y=0)
+        # elif a == AgentAction.Top:
+        #     self.move(x=0, y=1)
+        # elif a == AgentAction.BottomLeft:
+        #     self.move(x=-1, y=-1)
+        # elif a==AgentAction.Left:
+        #     self.move(x=-1, y=0)
+        # elif a == AgentAction.TopLeft:
+        #     self.move(x=-1, y=1)

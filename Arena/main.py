@@ -17,8 +17,9 @@ if __name__ == '__main__':
     env = Environment()
 
     blue_decision_maker = AbsDecisionMaker()
+    # blue_decision_maker = RafaelDecisionMaker(HARD_AGENT)
     red_decision_maker = RafaelDecisionMaker(EASY_AGENT)
-    # red_decision_maker = RafaelDecisionMaker(HARD_AGENT)
+
 
     env.blue_player = Entity(blue_decision_maker)
     env.red_player = Entity(red_decision_maker)
@@ -94,6 +95,8 @@ if __name__ == '__main__':
             # if we exited the loop because we reached MAX_STEPS_PER_EPISODE
             env.update_win_counters()
             current_episode.is_terminal = True
+
+        print('Blue Wins: ', env.wins_for_blue)
 
         if env.wins_for_blue > WINS_FOR_FLAG:
             print('Rafael@Technion:beware')
