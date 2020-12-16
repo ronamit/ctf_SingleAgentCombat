@@ -15,6 +15,27 @@ def update_count(d, k):
     else:
         d[k] = 1
 
+def update_model_est(initial_state, new_state, action, reward, counts_sas, counts_sa):
+
+    my_x = initial_state.my_pos._x
+    my_y = initial_state.my_pos._y
+    enemy_x = initial_state.enemy_pos._x
+    enemy_y = initial_state.enemy_pos._y
+
+    a = int(action) - 1
+
+    my_x_next = new_state.my_pos._x
+    my_y_next = new_state.my_pos._y
+    enemy_x_next = new_state.enemy_pos._x
+    enemy_y_next = new_state.enemy_pos._y
+
+    # Count transition s,a,s'
+    update_count(counts_sas, (my_x, my_y, enemy_x, enemy_y, a, my_x_next, my_y_next, enemy_x_next, enemy_y_next))
+
+    # Count visitation s,a
+    update_count(counts_sa, (my_x, my_y, enemy_x, enemy_y, a))
+
+
 def collect_data(n_samples):
 
 
@@ -72,20 +93,13 @@ def collect_data(n_samples):
         # handle reward
         reward_step_blue, reward_step_red = env.handle_reward()
 
+        # Update from Blue's perspective:
+        update_model_est(initial_state_blue, new_observation_for_blue, action_blue, reward_step_blue, counts_sas,
+                         counts_sa)
 
-        blue_x = initial_state_blue.my_pos._x
-        blue_y = initial_state_blue.my_pos._y
-        red_x = initial_state_red.my_pos._x
-        red_y = initial_state_red.my_pos._y
-        blue_a = int(action_blue) - 1
-        red_a = int(action_red) - 1
-
-        blue_x_next = new_observation_for_blue.my_pos._x
-        blue_y_next = new_observation_for_blue.my_pos._y
-
-        # Blue's State-transition:
-        update_count(counts_sas, (blue_x, blue_y, blue_a, blue_x_next, blue_y_next))
-
+        # Update from Red's perspective:
+        update_model_est(initial_state_red, new_observation_for_red, action_red, reward_step_red, counts_sas,
+                         counts_sa)
 
         # TODO: update our model estimation P(s,a,s') = N(s,a,s')/N(s,s'), do this both ways (switch red and blue)
         pass
