@@ -28,13 +28,7 @@ def is_terminal_state(state):
     set_env_state(env, state)
     return env.check_terminal()
 
-# ------------------------------------------------------------------------------------------------------------~
-
-def get_state(state_action):
-    # return only the state part
-    blue_pos, red_pos, a = state_action
-    state = blue_pos + red_pos
-    return state
+# ------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------~
 
 def get_reward(state):
@@ -43,7 +37,23 @@ def get_reward(state):
     return reward_blue
 
 # ------------------------------------------------------------------------------------------------------------~
+#
+def get_next_pos(pos, action):
+    dummy_blue.x = pos[0]
+    dummy_blue.y = pos[1]
+    dummy_blue.action(action)
+    return (dummy_blue.x, dummy_blue.y)
 
+
+# ------------------------------------------------------------------------------------------------------------~
+def max_a_Q(Q, s):
+    out = -np.infty
+    for a in range(n_actions):
+        s_a = s + a  # the state-action pair
+        out = max(out, Q[s_a])
+    # end for
+    return out
+#end def
 
 #------------------------------------------------------------------------------------------------------------~
 enemy_name = 'hard'  # 'easy' | 'medium' | 'hard'
@@ -73,8 +83,10 @@ Q = {}
 for i_iter in range(n_iter):
     max_diff = 0
     for state_action in state_action_generator():
-
-        state = get_state(state_action)
+        state = state_action[:4]
+        blue_pos = state[:2]
+        red_pos = state[2:]
+        a_blue = state_action[4]  # blue's action
 
         # get immediate reward
         reward = get_reward(state)
@@ -84,15 +96,19 @@ for i_iter in range(n_iter):
             continue
         else:
             # Bellman update
-            # we need to go over all possible next states and weight by their probabilty
-
+            # we need to go over all possible next states and weight by their probability
             enemy_action_prob = enemy_policy_counts[state] / n_samples
-
             # the next state is composed of pos_blue_next = f(pos_blue,a_blue),
             # and  pos_red_next = f(pos_blue,a_red),  where a_red is the random enemy action
             # so we need to sum all the possibilities for a_red, weighted by enemy_action_prob
-
-            Q[state_action] = reward + gamma *0000000000000
+            val_next = 0
+            next_pos_blue = get_next_pos(blue_pos, a_blue)
+            for a_red in range(n_actions):
+                next_pos_red = get_next_pos(red_pos, a_red)
+                next_state = next_pos_blue + next_pos_red
+                val_next += enemy_action_prob[a_red] * max_a_Q(Q_prev, next_state)
+            # end for
+            Q[state_action] = reward + gamma * val_next
         max_diff = max(max_diff, np.abs(Q[state_action] - Q_prev[state_action]))
     # end for
     if max_diff <= converge_epsilon:
