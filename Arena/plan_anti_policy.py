@@ -24,7 +24,9 @@ def state_action_generator():
 
 def is_terminal_state(state_action):
     blue_pos, red_pos, a = state_action
-    return blue_pos == red_pos
+    state = blue_pos + red_pos
+    set_env_state(env, state)
+    return env.check_terminal()
 
 # ------------------------------------------------------------------------------------------------------------~
 
@@ -38,16 +40,6 @@ def get_reward(state_action):
 
 # ------------------------------------------------------------------------------------------------------------~
 
-    def check_terminal(self):
-        flag_red_on_blue, _ = is_dominating(self.red_player, self.blue_player)
-        flag_blue_on_red, _ = is_dominating(self.blue_player, self.red_player)
-        if self.blue_player.x == self.red_player.x and self.blue_player.y == self.red_player.y:
-            return True
-        elif flag_red_on_blue:
-            return True
-        elif flag_blue_on_red:
-            return True
-        return False
 
 #------------------------------------------------------------------------------------------------------------~
 enemy_name = 'hard'  # 'easy' | 'medium' | 'hard'
@@ -70,15 +62,17 @@ Q = {}
 for i_iter in range(n_iter):
     max_diff = 0
     for state_action in state_action_generator():
-        if is_terminal(state_action):
-            Q[state_action] = TIE  # 0 reward
 
         # get immediate reward
         reward = get_reward(state_action)
 
-        # Bellman update
-        Q[state_action] = Q_prev[state_action]
-        max_diff = max(max_diff, np.abs(Q[state_action] - Q_prev[state_action]))
+        if is_terminal_state(state_action):
+            Q[state_action] = reward
+            continue
+        else:
+            # Bellman update
+            Q[state_action] = Q_prev[state_action]
+            max_diff = max(max_diff, np.abs(Q[state_action] - Q_prev[state_action]))
     # end for
     if max_diff <= converge_epsilon:
         break
