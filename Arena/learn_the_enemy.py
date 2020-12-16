@@ -77,8 +77,8 @@ def learn_agent(agent_name, n_samples = 20):
     for blue_pos, red_pos in state_generator():
         if blue_pos == red_pos:
             continue # terminal state
-        state_blue = blue_pos + red_pos  # state_blue=(blue_pos, red_pos)
-        state_red = red_pos + blue_pos # state_red=(red_pos, blue_pos) , red see the state the other way around
+        state_blue = blue_pos + red_pos  # # concatenate  state_blue=(blue_pos, red_pos)
+        state_red = red_pos + blue_pos #  # concatenate  state_red=(red_pos, blue_pos) , red see the state the other way around
 
         # set  position of the players in the environment
         set_env_state(env, state_blue)

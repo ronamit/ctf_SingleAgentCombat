@@ -46,11 +46,11 @@ def get_next_pos(pos, action):
 
 
 # ------------------------------------------------------------------------------------------------------------~
-def max_a_Q(Q, s):
+def max_a_Qprev(Qprev, s):
     out = -np.infty
     for a in range(n_actions):
-        s_a = s + a  # the state-action pair
-        out = max(out, Q[s_a])
+        s_a = s + (a,)  # concatenate the state-action pair
+        out = max(out, Qprev[s_a])
     # end for
     return out
 #end def
@@ -83,10 +83,10 @@ Q = {}
 for i_iter in range(n_iter):
     max_diff = 0
     for state_action in state_action_generator():
-        state = state_action[:4]
-        blue_pos = state[:2]
-        red_pos = state[2:]
-        a_blue = state_action[4]  # blue's action
+        blue_pos = state_action[0]
+        red_pos = state_action[1]
+        state = blue_pos + red_pos  # concatenate
+        a_blue = state_action[2]  # blue's action
 
         # get immediate reward
         reward = get_reward(state)
@@ -106,7 +106,8 @@ for i_iter in range(n_iter):
             for a_red in range(n_actions):
                 next_pos_red = get_next_pos(red_pos, a_red)
                 next_state = next_pos_blue + next_pos_red
-                val_next += enemy_action_prob[a_red] * max_a_Q(Q_prev, next_state)
+                val_next += enemy_action_prob[a_red] * max_a_Qprev(Q_prev, next_state)
+                # TODO: change all state-action format to (xb,yb, xr,yr, ab) so it will fit as  a dict key
             # end for
             Q[state_action] = reward + gamma * val_next
         max_diff = max(max_diff, np.abs(Q[state_action] - Q_prev[state_action]))
