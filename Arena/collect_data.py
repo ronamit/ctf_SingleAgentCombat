@@ -1,5 +1,6 @@
 
-
+import time
+import timeit
 from RafaelPlayer.RafaelDecisionMaker import RafaelDecisionMaker
 from Arena.Environment import Environment, Episode
 from Arena.constants import HARD_AGENT, AgentAction
@@ -9,9 +10,8 @@ from Arena.CState import State
 
 
 
-def collect_data():
+def collect_data(n_samples):
 
-    n_samples = int(1e2)
 
     env = Environment()
 
@@ -25,7 +25,8 @@ def collect_data():
 
 
 
-    for i_samp in range(n_samples): # TODO: parallel?
+    for i_samp in range(n_samples):
+        # TODO: parallel?
 
 
         # set new start position for the players
@@ -49,9 +50,16 @@ def collect_data():
         ##### Red's turn! #####
         action_red: AgentAction = red_decision_maker.get_action(initial_state_red)
 
-        # update our model estimation P(s,a,s') = N(s,a,s')/N(s,s'), do this both ways (switch red and blue)
+        # TODO: update our model estimation P(s,a,s') = N(s,a,s')/N(s,s'), do this both ways (switch red and blue)
 
 
 
 if __name__ == '__main__':
-    collect_data()
+    start_time = timeit.default_timer()
+
+    n_samples = int(1e5)
+    collect_data(n_samples)
+
+    time_str = time.strftime("%H hours, %M minutes and %S seconds",
+                             time.gmtime(timeit.default_timer() - start_time))
+    print(f'Collected 2 X {n_samples} samples in  {time_str}')
