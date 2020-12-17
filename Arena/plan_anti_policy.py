@@ -38,9 +38,10 @@ def get_reward(state):
 
 # ------------------------------------------------------------------------------------------------------------~
 #
-def get_next_pos(pos, action):
+def get_next_pos(pos, a):
     dummy_blue.x = pos[0]
     dummy_blue.y = pos[1]
+    action = a + 1 # remember to change to 1-based index
     dummy_blue.action(action)
     return (dummy_blue.x, dummy_blue.y)
 
@@ -89,8 +90,7 @@ for i_iter in range(n_iter):
         a_blue = state_action[4]  # blue's action
         state = state_action[:4]
 
-        # get immediate reward
-        reward = get_reward(state)
+        reward = get_reward(state)   # get immediate reward
 
         if is_terminal_state(state):
             Q[state_action] = reward
