@@ -37,10 +37,10 @@ def state_generator():
 #------------------------------------------------------------------------------------------------------------~
 
 
-def update_pol_cnts(state, a, policy_counts):
+def update_pol_cnts(state, action, policy_counts):
     if state not in policy_counts:
         policy_counts[state] = np.zeros(n_actions, dtype=np.uint)
-    policy_counts[state][a] += 1
+    policy_counts[state][action] += 1
 # end def
 # ------------------------------------------------------------------------------------------------------------~
 
@@ -81,23 +81,27 @@ def learn_agent(agent_name, n_samples = 20):
     # go over each states = (blue position, red position)
     for blue_pos, red_pos in state_generator():
 
-        state = blue_pos + red_pos  # # concatenate  state_blue=(blue_pos, red_pos)
+        state_blue = blue_pos + red_pos  # # concatenate  state_blue=(blue_pos, red_pos)
+        state_red = red_pos + blue_pos #  # concatenate  state_red=(red_pos, blue_pos) , red see the state the other way around
 
-        if is_terminal_state(env, state):
+        if is_terminal_state(env, state_blue):
+            assert is_terminal_state(env, state_red)  # it should be also terminal for red
             continue
 
         # set  position of the players in the environment
-        set_env_state(env, state)
+        set_env_state(env, state_blue)
 
         # get observation
         observation_for_blue: State = env.get_observation_for_blue()
+        observation_for_red: State = env.get_observation_for_red()
 
         # the agents are not deterministic, so we want to find the distribution p(a|s)
         for i_samp in range(n_samples):
             # get the action chosen by each player
-            action_blue = blue_decision_maker.get_action(observation_for_blue)
-            a = action_blue - 1  #  change to 0-based index
-            update_pol_cnts(state, a, policy_counts)
+            action_blue = blue_decision_maker.get_action(observation_for_blue) - 1  #  change to 0-based index
+            action_red = red_decision_maker.get_action(observation_for_red) - 1  # change to 0-based index
+            update_pol_cnts(state_blue, action_blue, policy_counts)
+            update_pol_cnts(state_red, action_red, policy_counts)
         # end for
     # end for
     with open(f'learned_{agent_name}_enemy', 'wb') as myfile:
