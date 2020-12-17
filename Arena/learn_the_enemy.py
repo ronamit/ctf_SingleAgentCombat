@@ -96,7 +96,7 @@ def learn_agent(agent_name, n_samples = 20):
         for i_samp in range(n_samples):
             # get the action chosen by each player
             action_blue = blue_decision_maker.get_action(observation_for_blue)
-            a = action_blue - 1  #  change to 0-based index
+            a = action_blue - 1   # change to 0-based index
             update_pol_cnts(state, a, policy_counts)
         # end for
     # end for
@@ -108,13 +108,15 @@ def learn_agent(agent_name, n_samples = 20):
 if __name__ == '__main__':
     start_time = timeit.default_timer()
 
-    agent_name = 'hard'  # 'easy' | 'medium' | 'hard'
-    n_samples = 500
+    # agent_name = 'hard'  # 'easy' | 'medium' | 'hard'
 
-    print('-'*20, '\n Learning the ', agent_name, ' agent ....')
+    for agent_name in {'easy', 'medium', 'hard'}:
+        n_samples = 500
 
-    policy_counts = learn_agent(agent_name, n_samples)
+        print('-'*20, '\n Learning the ', agent_name, ' agent ....')
 
-    time_str = time.strftime("%H hours, %M minutes and %S seconds",
-                             time.gmtime(timeit.default_timer() - start_time))
-    print('-'*20, '\nFinished learning the ', agent_name, ' agent in ', time_str)
+        policy_counts = learn_agent(agent_name, n_samples)
+
+        time_str = time.strftime("%H hours, %M minutes and %S seconds",
+                                 time.gmtime(timeit.default_timer() - start_time))
+        print('-'*20, '\nFinished learning the ', agent_name, ' agent in ', time_str)
