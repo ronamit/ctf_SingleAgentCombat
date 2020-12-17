@@ -31,7 +31,7 @@ def state_generator():
     # note: to get all states  -go over also the state with swapped blue-red roles
     for blue_pos in valid_pos_generator():
         for red_pos in valid_pos_generator():
-            yield blue_pos, red_pos
+            yield blue_pos + red_pos   # concatenate  state_blue=(blue_pos, red_pos)
 # end for
 
 #------------------------------------------------------------------------------------------------------------~
@@ -78,10 +78,11 @@ def learn_agent(agent_name, n_samples = 20):
     env.blue_player = Entity(blue_decision_maker)
     env.red_player = Entity(red_decision_maker)
     policy_counts = {}
-    # go over each states = (blue position, red position)
-    for blue_pos, red_pos in state_generator():
 
-        state = blue_pos + red_pos  # # concatenate  state_blue=(blue_pos, red_pos)
+    # go over each states = (blue position, red position)
+    for state in state_generator():
+        blue_pos = state[0:2]
+        red_pos = state[2:4]
 
         if is_terminal_state(env, state):
             continue
@@ -111,7 +112,7 @@ if __name__ == '__main__':
 
     # agent_name = 'hard'  # 'easy' | 'medium' | 'hard'
 
-    for agent_name in {'easy', 'medium', 'hard'}:
+    for agent_name in ['easy', 'medium', 'hard']:
         n_samples = 500
 
         print('-'*20, '\n Learning the ', agent_name, ' agent ....')

@@ -56,13 +56,10 @@ def max_over_a_of_Qsa(Q, s):
 #------------------------------------------------------------------------------------------------------------~
 
 
-def plan_anti_policy(enemy_name):
+def plan_anti_policy(enemy_name, n_iter, converge_epsilon):
     with open(f'learned_{enemy_name}_enemy', 'rb') as myfile:
         _, enemy_policy_counts, n_samples  = pickle.load(myfile)
 
-
-    n_iter = 0 # int(1e2)
-    converge_epsilon = 2e-3
 
     # set discount factor in [0,1]
     #  Heuristic - at  t=(MAX_STEPS_PER_EPISODE-1) the discounted return accumulates (MOVE_PENALTY/WIN_REWARD) of the reward
@@ -120,8 +117,11 @@ def plan_anti_policy(enemy_name):
     my_policy = {}
     # derive optimal policy and save to file
     for state in state_generator():
-        my_policy[state] = np.argmax([qFunc[state + a] for a in range(n_actions)])
-
+        if not is_terminal_state(env, state):
+            qVals = [qFunc[state + (a,)] for a in range(n_actions)]
+            my_policy[state] = np.argmax(qVals)
+        # end if
+    # end for
     with open(f'anti_policy_vs_{enemy_name}_enemy', 'wb') as myfile:
         pickle.dump([enemy_name, my_policy, n_iter, converge_epsilon], myfile)
     return my_policy
@@ -130,11 +130,13 @@ def plan_anti_policy(enemy_name):
 if __name__ == '__main__':
     start_time = timeit.default_timer()
 
-    for enemy_name in {'easy', 'medium', 'hard'}:
+    for enemy_name in ['easy', 'medium', 'hard']:
 
         print('-'*20, '\n Plan anti policy to the ', enemy_name, ' agent ....')
 
-        anti_policy = plan_anti_policy(enemy_name)
+        n_iter = int(1e2)
+        converge_epsilon = 2e-3
+        anti_policy = plan_anti_policy(enemy_name, n_iter, converge_epsilon)
 
         time_str = time.strftime("%H hours, %M minutes and %S seconds",
                                  time.gmtime(timeit.default_timer() - start_time))
