@@ -1,17 +1,24 @@
 
 from AbsDecisionMaker import AbsDecisionMaker
-import abc
-from typing import Tuple
+
 import numpy as np
 from constants import SIZE_Y, SIZE_X
 from Arena.CState import State
 from Arena.constants import AgentAction
-import pickle
+
+from json import load
+from ast import literal_eval
 
 #------------------------------------------------------------------------------------------------------------~
 
-with open(f'misharon_policy', 'rb') as myfile:
-    _, my_policy, _, _ = pickle.load(myfile)
+
+with open('misharon_policy.json', 'r') as myfile:
+    # (i) load json object
+    obj = load(myfile)
+    # (ii) convert loaded keys from string back to tuple
+    my_policy = {literal_eval(k): v for k, v in obj.items()}
+    pass
+
 #------------------------------------------------------------------------------------------------------------~
 
 
