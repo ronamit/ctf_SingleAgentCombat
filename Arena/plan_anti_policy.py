@@ -134,8 +134,8 @@ if __name__ == '__main__':
 
         print('-'*20, '\n Plan anti policy to the ', enemy_name, ' agent ....')
 
-        n_iter = int(1e2)
-        converge_epsilon = 2e-3
+        n_iter = 150
+        converge_epsilon = 1e-4
         anti_policy = plan_anti_policy(enemy_name, n_iter, converge_epsilon)
 
         time_str = time.strftime("%H hours, %M minutes and %S seconds",
