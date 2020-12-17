@@ -97,7 +97,7 @@ if __name__ == '__main__':
             env.update_win_counters()
             current_episode.is_terminal = True
 
-        print('Blue Wins: ', env.wins_for_blue)
+        print(f'Episode {episode+1}, Blue Wins: {env.wins_for_blue}')
 
         if env.wins_for_blue > WINS_FOR_FLAG:
             print('Rafael@Technion:beware')
