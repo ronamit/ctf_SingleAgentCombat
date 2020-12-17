@@ -57,9 +57,9 @@ def max_over_a_of_Qsa(Q, s):
 
 
 def plan_anti_policy(enemy_name, n_iter, converge_epsilon):
+
     with open(f'learned_{enemy_name}_enemy', 'rb') as myfile:
         _, enemy_policy_counts, n_samples  = pickle.load(myfile)
-
 
     # set discount factor in [0,1]
     #  Heuristic - at  t=(MAX_STEPS_PER_EPISODE-1) the discounted return accumulates (MOVE_PENALTY/WIN_REWARD) of the reward
