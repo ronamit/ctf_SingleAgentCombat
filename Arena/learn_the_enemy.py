@@ -53,6 +53,11 @@ def set_env_state(env, state):
     env.red_player.x = state[2]
     env.red_player.y = state[3]
 
+#------------------------------------------------------------------------------------------------------------~
+
+def is_terminal_state(env, state):
+    set_env_state(env, state)
+    return env.check_terminal()
 
 #------------------------------------------------------------------------------------------------------------~
 
@@ -75,10 +80,13 @@ def learn_agent(agent_name, n_samples = 20):
     policy_counts = {}
     # go over each states = (blue position, red position)
     for blue_pos, red_pos in state_generator():
-        if blue_pos == red_pos:
-            continue # terminal state
+
         state_blue = blue_pos + red_pos  # # concatenate  state_blue=(blue_pos, red_pos)
         state_red = red_pos + blue_pos #  # concatenate  state_red=(red_pos, blue_pos) , red see the state the other way around
+
+        if is_terminal_state(env, state_blue):
+            assert is_terminal_state(env, state_red)  # it should be also terminal for red
+            continue
 
         # set  position of the players in the environment
         set_env_state(env, state_blue)
@@ -104,7 +112,7 @@ def learn_agent(agent_name, n_samples = 20):
 if __name__ == '__main__':
     start_time = timeit.default_timer()
 
-    agent_name = 'easy'  # 'easy' | 'medium' | 'hard'
+    agent_name = 'hard'  # 'easy' | 'medium' | 'hard'
     n_samples = 500
 
     print('-'*20, '\n Learning the ', agent_name, ' agent ....')
