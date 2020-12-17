@@ -2,7 +2,7 @@
 import time
 import timeit
 import pickle
-from learn_the_enemy import valid_pos_generator, n_actions, set_env_state, is_terminal_state
+from learn_the_enemy import valid_pos_generator, n_actions, set_env_state, is_terminal_state, state_generator
 import numpy as np
 from Arena.Environment import Environment
 from Arena.Entity import Entity
@@ -61,8 +61,8 @@ def plan_anti_policy(enemy_name):
         _, enemy_policy_counts, n_samples  = pickle.load(myfile)
 
 
-    n_iter = int(1e2)
-    converge_epsilon = 1e-3
+    n_iter = 0 # int(1e2)
+    converge_epsilon = 2e-3
 
     # set discount factor in [0,1]
     #  Heuristic - at  t=(MAX_STEPS_PER_EPISODE-1) the discounted return accumulates (MOVE_PENALTY/WIN_REWARD) of the reward
@@ -78,7 +78,7 @@ def plan_anti_policy(enemy_name):
         qFunc[state_action] = np.random.uniform()
     # end for
 
-    # Q-value Iteration Algorithm
+    # Q-value Iteration Algorithm (with async updates)
     for i_iter in range(n_iter):
         max_diff = 0
         for state_action in state_action_generator():
@@ -116,8 +116,15 @@ def plan_anti_policy(enemy_name):
         if max_diff <= converge_epsilon:
             break
     # end for
-    # TODO: derive optimal policy and save to file
-    return None
+
+    my_policy = {}
+    # derive optimal policy and save to file
+    for state in state_generator():
+        my_policy[state] = np.argmax([qFunc[state + a] for a in range(n_actions)])
+
+    with open(f'anti_policy_vs_{enemy_name}_enemy', 'wb') as myfile:
+        pickle.dump([enemy_name, my_policy, n_iter, converge_epsilon], myfile)
+    return my_policy
 # end def
 #------------------------------------------------------------------------------------------------------------~
 if __name__ == '__main__':
