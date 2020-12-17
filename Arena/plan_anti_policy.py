@@ -1,5 +1,5 @@
 
-from Arena.constants import TIE
+
 import pickle
 from learn_the_enemy import valid_pos_generator, n_actions, set_env_state
 import numpy as np
@@ -8,7 +8,7 @@ from Arena.Entity import Entity
 from RafaelPlayer.RafaelDecisionMaker import RafaelDecisionMaker
 from Arena.constants import WIN_REWARD, MOVE_PENALTY, MAX_STEPS_PER_EPISODE, HARD_AGENT
 
-# define dummy players, just so we can use the classs functions
+# define dummy players, just so we can use the class functions
 dummy_blue = Entity(RafaelDecisionMaker(HARD_AGENT))
 dummy_red = Entity(RafaelDecisionMaker(HARD_AGENT))
 env = Environment()
@@ -21,7 +21,7 @@ def state_action_generator():
     for blue_pos in valid_pos_generator():
         for red_pos in valid_pos_generator():
             for a in range(n_actions):
-                yield blue_pos, red_pos, a
+                yield blue_pos + red_pos + (a,)   # concatenate
 #------------------------------------------------------------------------------------------------------------~
 
 def is_terminal_state(state):
@@ -83,10 +83,11 @@ Q = {}
 for i_iter in range(n_iter):
     max_diff = 0
     for state_action in state_action_generator():
-        blue_pos = state_action[0]
-        red_pos = state_action[1]
-        state = blue_pos + red_pos  # concatenate
-        a_blue = state_action[2]  # blue's action
+        # unpack
+        blue_pos = state_action[0:2]
+        red_pos = state_action[2:4]
+        a_blue = state_action[4]  # blue's action
+        state = state_action[:4]
 
         # get immediate reward
         reward = get_reward(state)
@@ -97,7 +98,7 @@ for i_iter in range(n_iter):
         else:
             # Bellman update
             # we need to go over all possible next states and weight by their probability
-            enemy_action_prob = enemy_policy_counts[state] / n_samples
+            enemy_action_probs = enemy_policy_counts[state] / n_samples
             # the next state is composed of pos_blue_next = f(pos_blue,a_blue),
             # and  pos_red_next = f(pos_blue,a_red),  where a_red is the random enemy action
             # so we need to sum all the possibilities for a_red, weighted by enemy_action_prob
@@ -106,10 +107,11 @@ for i_iter in range(n_iter):
             for a_red in range(n_actions):
                 next_pos_red = get_next_pos(red_pos, a_red)
                 next_state = next_pos_blue + next_pos_red
-                val_next += enemy_action_prob[a_red] * max_a_Qprev(Q_prev, next_state)
+                val_next += enemy_action_probs[a_red] * max_a_Qprev(Q_prev, next_state)
                 # TODO: change all state-action format to (xb,yb, xr,yr, ab) so it will fit as  a dict key
             # end for
             Q[state_action] = reward + gamma * val_next
+        # end if
         max_diff = max(max_diff, np.abs(Q[state_action] - Q_prev[state_action]))
     # end for
     if max_diff <= converge_epsilon:
