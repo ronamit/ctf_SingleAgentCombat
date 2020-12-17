@@ -8,7 +8,7 @@ import pickle
 #------------------------------------------------------------------------------------------------------------~
 
 enemy_name = 'hard'
-with open(f'anti_policy_vs_{enemy_name}_enemy', 'rb') as myfile:
+with open(f'misharon_policy', 'rb') as myfile:
     _, my_policy, _, _ = pickle.load(myfile)
 #------------------------------------------------------------------------------------------------------------~
 
