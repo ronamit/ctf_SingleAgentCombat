@@ -71,13 +71,12 @@ def plan_anti_policy(enemy_name):
     # Note: to get the optimal time-dependent policy we need to solve a finete-horizon problem and learn Q_t for each t in the horizon
     # BUT, our desicion maker seems to only depend on the state and not on the time ( get_action(self, state: State)-> AgentAction:)
 
-    # init Q:
-    Q_prev = {}
+    # init Q function:
+    qFunc = {}
     for state_action in state_action_generator():
         # use a random number to create some diversity
-        Q_prev[state_action] = np.random.uniform()
-
-    Q = {}
+        qFunc[state_action] = np.random.uniform()
+    # end for
 
     # Q-value Iteration Algorithm
     for i_iter in range(n_iter):
@@ -92,8 +91,7 @@ def plan_anti_policy(enemy_name):
             reward = get_reward(env, state)   # get immediate reward
 
             if is_terminal_state(env, state):
-                Q[state_action] = reward
-                continue
+                new_Q = reward
             else:
                 # Bellman update
                 # we need to go over all possible next states and weight by their probability
@@ -108,9 +106,11 @@ def plan_anti_policy(enemy_name):
                     next_state = next_pos_blue + next_pos_red
                     val_next += enemy_action_probs[a_red] * max_over_a_of_Qsa(Q_prev, next_state)
                 # end for
-                Q[state_action] = reward + gamma * val_next
+                new_Q = reward + gamma * val_next
             # end if
-            max_diff = max(max_diff, np.abs(Q[state_action] - Q_prev[state_action]))
+            delta_Q = np.abs(qFunc[state_action] - new_Q)
+            qFunc[state_action] = new_Q
+            max_diff = max(max_diff, delta_Q)
         # end for
         print(f'Finished iter {i_iter}/{n_iter}, max_diff = {max_diff}')
         if max_diff <= converge_epsilon:
