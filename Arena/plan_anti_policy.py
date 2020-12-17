@@ -1,5 +1,6 @@
 
-
+import time
+import timeit
 import pickle
 from learn_the_enemy import valid_pos_generator, n_actions, set_env_state, is_terminal_state
 import numpy as np
@@ -53,63 +54,81 @@ def max_over_a_of_Qsa(Q, s):
 #end def
 
 #------------------------------------------------------------------------------------------------------------~
-enemy_name = 'hard'  # 'easy' | 'medium' | 'hard'
-
-with open(f'learned_{enemy_name}_enemy', 'rb') as myfile:
-    _, enemy_policy_counts, n_samples  = pickle.load(myfile)
 
 
-n_iter = int(1e3)
-converge_epsilon = 1e-5
+def plan_anti_policy(enemy_name):
+    with open(f'learned_{enemy_name}_enemy', 'rb') as myfile:
+        _, enemy_policy_counts, n_samples  = pickle.load(myfile)
 
-# set discount factor in [0,1]
-#  Heuristic - at  t=(MAX_STEPS_PER_EPISODE-1) the discounted return accumulates (MOVE_PENALTY/WIN_REWARD) of the reward
-gamma = (MOVE_PENALTY / WIN_REWARD)**(1/(MAX_STEPS_PER_EPISODE-1))
 
-# Note: to get the optimal time-dependent policy we need to solve a finete-horizon problem and learn Q_t for each t in the horizon
-# BUT, our desicion maker seems to only depend on the state and not on the time ( get_action(self, state: State)-> AgentAction:)
+    n_iter = int(1e2)
+    converge_epsilon = 1e-3
 
-# init Q:
-Q_prev = {}
-for state_action in state_action_generator():
-    # use a random number to create some diversity
-    Q_prev[state_action] = np.random.uniform()
+    # set discount factor in [0,1]
+    #  Heuristic - at  t=(MAX_STEPS_PER_EPISODE-1) the discounted return accumulates (MOVE_PENALTY/WIN_REWARD) of the reward
+    gamma = (MOVE_PENALTY / WIN_REWARD)**(1/(MAX_STEPS_PER_EPISODE-1))
 
-Q = {}
+    # Note: to get the optimal time-dependent policy we need to solve a finete-horizon problem and learn Q_t for each t in the horizon
+    # BUT, our desicion maker seems to only depend on the state and not on the time ( get_action(self, state: State)-> AgentAction:)
 
-# Q-value Iteration Algorithm
-for i_iter in range(n_iter):
-    max_diff = 0
+    # init Q:
+    Q_prev = {}
     for state_action in state_action_generator():
-        # unpack
-        blue_pos = state_action[0:2]
-        red_pos = state_action[2:4]
-        a_blue = state_action[4]  # blue's action
-        state = state_action[:4]
+        # use a random number to create some diversity
+        Q_prev[state_action] = np.random.uniform()
 
-        reward = get_reward(env, state)   # get immediate reward
+    Q = {}
 
-        if is_terminal_state(env, state):
-            Q[state_action] = reward
-            continue
-        else:
-            # Bellman update
-            # we need to go over all possible next states and weight by their probability
-            enemy_action_probs = enemy_policy_counts[state] / n_samples
-            # the next state is composed of pos_blue_next = f(pos_blue,a_blue),
-            # and  pos_red_next = f(pos_blue,a_red),  where a_red is the random enemy action
-            # so we need to sum all the possibilities for a_red, weighted by enemy_action_prob
-            val_next = 0
-            next_pos_blue = get_next_pos(blue_pos, a_blue)
-            for a_red in range(n_actions):
-                next_pos_red = get_next_pos(red_pos, a_red)
-                next_state = next_pos_blue + next_pos_red
-                val_next += enemy_action_probs[a_red] * max_over_a_of_Qsa(Q_prev, next_state)
-            # end for
-            Q[state_action] = reward + gamma * val_next
-        # end if
-        max_diff = max(max_diff, np.abs(Q[state_action] - Q_prev[state_action]))
+    # Q-value Iteration Algorithm
+    for i_iter in range(n_iter):
+        max_diff = 0
+        for state_action in state_action_generator():
+            # unpack
+            blue_pos = state_action[0:2]
+            red_pos = state_action[2:4]
+            a_blue = state_action[4]  # blue's action
+            state = state_action[:4]
+
+            reward = get_reward(env, state)   # get immediate reward
+
+            if is_terminal_state(env, state):
+                Q[state_action] = reward
+                continue
+            else:
+                # Bellman update
+                # we need to go over all possible next states and weight by their probability
+                enemy_action_probs = enemy_policy_counts[state] / n_samples
+                # the next state is composed of pos_blue_next = f(pos_blue,a_blue),
+                # and  pos_red_next = f(pos_blue,a_red),  where a_red is the random enemy action
+                # so we need to sum all the possibilities for a_red, weighted by enemy_action_prob
+                val_next = 0
+                next_pos_blue = get_next_pos(blue_pos, a_blue)
+                for a_red in range(n_actions):
+                    next_pos_red = get_next_pos(red_pos, a_red)
+                    next_state = next_pos_blue + next_pos_red
+                    val_next += enemy_action_probs[a_red] * max_over_a_of_Qsa(Q_prev, next_state)
+                # end for
+                Q[state_action] = reward + gamma * val_next
+            # end if
+            max_diff = max(max_diff, np.abs(Q[state_action] - Q_prev[state_action]))
+        # end for
+        print(f'Finished iter {i_iter}/{n_iter}, max_diff = {max_diff}')
+        if max_diff <= converge_epsilon:
+            break
     # end for
-    if max_diff <= converge_epsilon:
-        break
-# end for
+    # TODO: derive optimal policy and save to file
+    return None
+# end def
+#------------------------------------------------------------------------------------------------------------~
+if __name__ == '__main__':
+    start_time = timeit.default_timer()
+
+    for enemy_name in {'easy', 'medium', 'hard'}:
+
+        print('-'*20, '\n Plan anti policy to the ', enemy_name, ' agent ....')
+
+        anti_policy = plan_anti_policy(enemy_name)
+
+        time_str = time.strftime("%H hours, %M minutes and %S seconds",
+                                 time.gmtime(timeit.default_timer() - start_time))
+        print('-'*20, '\nFinished learning the ', enemy_name, ' agent in ', time_str)
