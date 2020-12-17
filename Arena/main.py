@@ -16,10 +16,11 @@ if __name__ == '__main__':
 
     env = Environment()
 
-    blue_decision_maker = AbsDecisionMaker()
-    # blue_decision_maker = RafaelDecisionMaker(HARD_AGENT)
-    red_decision_maker = RafaelDecisionMaker(EASY_AGENT)
+    blue_decision_maker = AbsDecisionMaker()  # use our agent
 
+    # red_decision_maker = RafaelDecisionMaker(EASY_AGENT)
+    # red_decision_maker = RafaelDecisionMaker(MEDIUM_AGENT)
+    red_decision_maker = RafaelDecisionMaker(HARD_AGENT)
 
     env.blue_player = Entity(blue_decision_maker)
     env.red_player = Entity(red_decision_maker)
