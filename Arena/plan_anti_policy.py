@@ -108,7 +108,6 @@ for i_iter in range(n_iter):
                 next_pos_red = get_next_pos(red_pos, a_red)
                 next_state = next_pos_blue + next_pos_red
                 val_next += enemy_action_probs[a_red] * max_a_Qprev(Q_prev, next_state)
-                # TODO: change all state-action format to (xb,yb, xr,yr, ab) so it will fit as  a dict key
             # end for
             Q[state_action] = reward + gamma * val_next
         # end if
