@@ -6,7 +6,7 @@ from Arena.Entity import Entity
 from RafaelPlayer.RafaelDecisionMaker import RafaelDecisionMaker
 from Arena.Environment import Environment, Episode
 from Arena.constants import *
-from AbsDecisionMaker import AbsDecisionMaker
+from misharonDecisionMaker import misharonDecisionMaker
 
 style.use("ggplot")
 
@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     env = Environment()
 
-    blue_decision_maker = AbsDecisionMaker()  # use our agent
+    blue_decision_maker = misharonDecisionMaker()  # use our agent
 
     # red_decision_maker = RafaelDecisionMaker(EASY_AGENT)
     # red_decision_maker = RafaelDecisionMaker(MEDIUM_AGENT)
