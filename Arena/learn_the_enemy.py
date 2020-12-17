@@ -112,7 +112,7 @@ if __name__ == '__main__':
 
     # agent_name = 'hard'  # 'easy' | 'medium' | 'hard'
 
-    for agent_name in ['easy', 'medium', 'hard']:
+    for agent_name in ['hard']:
         n_samples = 500
 
         print('-'*20, '\n Learning the ', agent_name, ' agent ....')

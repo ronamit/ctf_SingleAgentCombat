@@ -130,7 +130,7 @@ def plan_anti_policy(enemy_name, n_iter, converge_epsilon):
 if __name__ == '__main__':
     start_time = timeit.default_timer()
 
-    for enemy_name in ['easy', 'medium', 'hard']:
+    for enemy_name in ['hard']:
 
         print('-'*20, '\n Plan anti policy to the ', enemy_name, ' agent ....')
 

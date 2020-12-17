@@ -7,7 +7,6 @@ from Arena.constants import AgentAction
 import pickle
 #------------------------------------------------------------------------------------------------------------~
 
-enemy_name = 'hard'
 with open(f'misharon_policy', 'rb') as myfile:
     _, my_policy, _, _ = pickle.load(myfile)
 #------------------------------------------------------------------------------------------------------------~
