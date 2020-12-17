@@ -104,7 +104,7 @@ def plan_anti_policy(enemy_name):
                 for a_red in range(n_actions):
                     next_pos_red = get_next_pos(red_pos, a_red)
                     next_state = next_pos_blue + next_pos_red
-                    val_next += enemy_action_probs[a_red] * max_over_a_of_Qsa(Q_prev, next_state)
+                    val_next += enemy_action_probs[a_red] * max_over_a_of_Qsa(qFunc, next_state)
                 # end for
                 new_Q = reward + gamma * val_next
             # end if
