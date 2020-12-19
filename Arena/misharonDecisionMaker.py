@@ -19,6 +19,15 @@ with open('misharon_policy.json', 'r') as myfile:
     my_policy = {literal_eval(k): v for k, v in obj.items()}
     pass
 
+
+import pickle
+enemy_name = 'hard'
+with open(f'anti_policy_vs_{enemy_name}_enemy') as myfile:
+    _, my_policy, _, _ = pickle.load(myfile)
+    pass
+
+
+
 #------------------------------------------------------------------------------------------------------------~
 
 

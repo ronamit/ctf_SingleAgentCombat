@@ -127,7 +127,7 @@ if __name__ == '__main__':
 
         print('-'*20, '\n Plan anti policy to the ', enemy_name, ' agent ....')
 
-        n_iter = 200
+        n_iter = 0
         converge_epsilon = 1e-4
         anti_policy = plan_anti_policy(enemy_policy_cnts, n_iter, converge_epsilon, initQ=None, save_to_file=True)
 
