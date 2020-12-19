@@ -83,8 +83,9 @@ def derive_greedy_policy(qFunc, env):
         if not is_terminal_state(state):
             my_policy[state] = np.argmax(get_Q_vals(qFunc, state))
         # end if
-        return my_policy
     # end for
+    return my_policy
+    # end def
 
 # ------------------------------------------------------------------------------------------------------------~
 
