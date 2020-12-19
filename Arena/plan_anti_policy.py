@@ -43,15 +43,13 @@ def get_next_pos(pos, a):
     return next_pos
 
 
-# ------------------------------------------------------------------------------------------------------------~
-def max_over_a_of_Qsa(Q, s):
-    out = -np.infty
-    for a in range(n_actions):
-        s_a = s + (a,)  # concatenate the state-action pair
-        out = max(out, Q[s_a])
-    # end for
-    return out
+#------------------------------------------------------------------------------------------------------------~
+
+def get_Q_vals(qFunc, s):
+    # returns array of Q(s,a) values for  all a
+    return [qFunc[s + (a,)] for a in range(n_actions)]
 #end def
+
 
 #------------------------------------------------------------------------------------------------------------~
 
@@ -101,7 +99,7 @@ def plan_anti_policy(enemy_name, n_iter, converge_epsilon):
                 for a_red in range(n_actions):
                     next_pos_red = get_next_pos(red_pos, a_red)
                     next_state = next_pos_blue + next_pos_red
-                    val_next += enemy_action_probs[a_red] * max_over_a_of_Qsa(qFunc, next_state)
+                    val_next += enemy_action_probs[a_red] * np.max(get_Q_vals(qFunc, next_state))
                 # end for
                 new_Q = reward + gamma * val_next
             # end if
@@ -118,8 +116,7 @@ def plan_anti_policy(enemy_name, n_iter, converge_epsilon):
     # derive optimal policy and save to file
     for state in state_generator():
         if not is_terminal_state(env, state):
-            qVals = [qFunc[state + (a,)] for a in range(n_actions)]
-            my_policy[state] = np.argmax(qVals)
+            my_policy[state] = np.argmax(get_Q_vals(qFunc, state))
         # end if
     # end for
     with open(f'anti_policy_vs_{enemy_name}_enemy', 'wb') as myfile:
