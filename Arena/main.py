@@ -1,4 +1,5 @@
-
+import time
+import timeit
 from matplotlib import style
 
 from Arena.CState import State
@@ -7,6 +8,7 @@ from RafaelPlayer.RafaelDecisionMaker import RafaelDecisionMaker
 from Arena.Environment import Environment, Episode
 from Arena.constants import *
 from misharonDecisionMaker import misharonDecisionMaker
+from misharonHillDecisionMaker import misharonHillDecisionMaker
 
 style.use("ggplot")
 
@@ -14,9 +16,12 @@ style.use("ggplot")
 # MAIN:
 if __name__ == '__main__':
 
+    start_time = timeit.default_timer()
+
     env = Environment()
 
-    blue_decision_maker = misharonDecisionMaker()  # use our agent
+    # blue_decision_maker = misharonDecisionMaker()  # use our agent
+    blue_decision_maker = misharonHillDecisionMaker()  # use our agent for the King of the Hill
 
     # red_decision_maker = RafaelDecisionMaker(EASY_AGENT)
     # red_decision_maker = RafaelDecisionMaker(MEDIUM_AGENT)
@@ -53,7 +58,7 @@ if __name__ == '__main__':
             # check of the start state is terminal
             current_episode.is_terminal = env.check_terminal()
             if current_episode.is_terminal:
-                env.tie_count+=1
+                env.tie_count += 1
                 env.starts_at_win += 1
                 current_episode.episode_reward_blue = 0
                 break
@@ -108,3 +113,6 @@ if __name__ == '__main__':
         env.steps_per_episode.append(steps_current_game)
 
     env.end_run()
+    time_str = time.strftime("%H hours, %M minutes and %S seconds",
+                             time.gmtime(timeit.default_timer() - start_time))
+    print('-' * 20, '\nFinished the entire run in ', time_str)
