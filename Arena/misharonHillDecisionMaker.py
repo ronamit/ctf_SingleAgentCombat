@@ -42,7 +42,7 @@ class misharonHillDecisionMaker(AbsDecisionMaker):
         self.qFunc = plan_anti_policy(self.enemy_policy_cnts, n_iter, converge_epsilon, initQ=self.qFunc)
 
         # Policy improvement (use argmax):
-        self.my_policy = derive_greedy_policy(self.qFunc, env)
+        self.my_policy = derive_greedy_policy(self.qFunc)
 
         # end def
 
@@ -73,9 +73,9 @@ class misharonHillDecisionMaker(AbsDecisionMaker):
         self.qFunc = plan_anti_policy(self.enemy_policy_cnts, n_iter, converge_epsilon, initQ=None)
 
         # Policy improvement (use argmax):
-        self.my_policy = derive_greedy_policy(self.qFunc, env)
+        self.my_policy = derive_greedy_policy(self.qFunc)
 
-        self._Q_matrix = init_Q_matrix() # needed for main.py to run
+        self._Q_matrix = init_Q_matrix()  # needed for main.py to run
 
     # end def
 
