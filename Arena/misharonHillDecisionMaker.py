@@ -51,11 +51,8 @@ class misharonHillDecisionMaker(AbsDecisionMaker):
     def get_action(self, state: State) -> AgentAction:
         s = (state.my_pos._x, state.my_pos._y,
              state.enemy_pos._x, state.enemy_pos._y)
-        if is_terminal_state(s):
-            action = 1
-        else:
-            a = self.my_policy[s]
-            action = a + 1  # change to 1-based index
+        a = self.my_policy[s]
+        action = a + 1  # change to 1-based index
         return action
         # end def
 
