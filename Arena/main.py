@@ -20,8 +20,8 @@ if __name__ == '__main__':
 
     env = Environment()
 
-    # blue_decision_maker = misharonDecisionMaker()  # use our agent
-    blue_decision_maker = misharonHillDecisionMaker()  # use our agent for the King of the Hill
+    blue_decision_maker = misharonDecisionMaker()  # use our agent
+    # blue_decision_maker = misharonHillDecisionMaker()  # use our agent for the King of the Hill
 
     # red_decision_maker = RafaelDecisionMaker(EASY_AGENT)
     # red_decision_maker = RafaelDecisionMaker(MEDIUM_AGENT)
