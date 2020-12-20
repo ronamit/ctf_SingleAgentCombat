@@ -20,11 +20,11 @@ with open('misharon_policy.json', 'r') as myfile:
     pass
 
 
-import pickle
-enemy_name = 'hard'
-with open(f'anti_policy_vs_{enemy_name}_enemy') as myfile:
-    _, my_policy, _, _ = pickle.load(myfile)
-    pass
+# import pickle
+# enemy_name = 'hard'
+# with open(f'anti_policy_vs_{enemy_name}_enemy') as myfile:
+#     _, my_policy, _, _ = pickle.load(myfile)
+#     pass
 
 
 
