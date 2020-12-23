@@ -81,7 +81,7 @@ if __name__ == '__main__':
         else:
             raise ValueError
 
-        n_samples = 500  # 500 is overkill, but it is OK if this is offline
+        n_samples = 200  # 200 is overkill, but it is OK if this is offline
         # n_samples = 10
 
         print('-'*20, '\n Learning the ', agent_name, ' agent ....')
