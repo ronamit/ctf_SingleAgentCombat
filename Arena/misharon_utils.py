@@ -65,10 +65,8 @@ def is_terminal_state(state):
     elif flag_blue_on_red:
         return True
     return False
-
-
-    set_env_state(env, state)
-    return env.check_terminal()
+    # set_env_state(env, state)
+    # return env.check_terminal()
 
 #------------------------------------------------------------------------------------------------------------~
 def get_Q_vals(qFunc, s):
