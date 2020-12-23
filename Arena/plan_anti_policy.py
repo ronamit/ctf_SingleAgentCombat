@@ -3,6 +3,7 @@ import time
 import timeit
 import pickle
 import numpy as np
+import json
 
 from Arena.Environment import Environment
 from Arena.Entity import Entity
@@ -110,9 +111,16 @@ def plan_anti_policy(enemy_policy_cnts, n_iter, converge_epsilon, initQ=None, sa
     my_policy = derive_greedy_policy(qFunc)
 
     print('Finished planing counter policy')
+    # if save_to_file:
+    #     with open(f'anti_policy_vs_{enemy_name}_enemy', 'wb') as myfile:
+    #         pickle.dump([enemy_name, my_policy, n_iter, converge_epsilon], myfile)
+
     if save_to_file:
-        with open(f'anti_policy_vs_{enemy_name}_enemy', 'wb') as myfile:
-            pickle.dump([enemy_name, my_policy, n_iter, converge_epsilon], myfile)
+        # save: convert each tuple key to a string before saving as json object
+        with open('misharon_policy.json', 'w') as myfile:
+            to_save = {str(k): int(v) for k, v in my_policy.items()}
+            json.dump(to_save, myfile)
+
 
     return my_policy
 # end def
