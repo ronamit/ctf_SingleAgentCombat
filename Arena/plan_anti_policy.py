@@ -91,7 +91,7 @@ def plan_anti_policy(enemy_policy_cnts, n_iter, converge_epsilon, initQ=None, sa
                 next_pos_blue = get_next_pos(blue_pos, a_blue)
                 for a_red in range(n_actions):
                     next_pos_red = get_next_pos(red_pos, a_red)
-                    next_state = next_pos_blue + next_pos_red
+                    next_state = next_pos_blue + next_pos_red  # concatenate
                     val_next += enemy_action_probs[a_red] * np.max(get_Q_vals(qFunc, next_state))
                 # end for
                 new_Q = reward + gamma * val_next
