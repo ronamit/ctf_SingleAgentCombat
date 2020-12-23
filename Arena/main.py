@@ -8,7 +8,7 @@ from RafaelPlayer.RafaelDecisionMaker import RafaelDecisionMaker
 from Arena.Environment import Environment, Episode
 from Arena.constants import *
 from misharonDecisionMaker import misharonDecisionMaker
-from misharonHillDecisionMaker import misharonHillDecisionMaker
+
 
 style.use("ggplot")
 
