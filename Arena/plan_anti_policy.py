@@ -81,7 +81,7 @@ def plan_anti_policy(enemy_policy_cnts, n_iter, converge_epsilon, initQ=None, sa
             if is_terminal_state(state):
                 new_Q = reward
             else:
-                # Bellman update
+                # Apply Bellman optimality operator
                 # we need to go over all possible next states and weight by their probability
                 enemy_action_probs = enemy_policy_cnts[state] / enemy_policy_cnts[state].sum()
                 # the next state is composed of pos_blue_next = f(pos_blue,a_blue),
