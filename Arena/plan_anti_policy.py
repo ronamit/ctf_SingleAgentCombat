@@ -46,7 +46,7 @@ def get_next_pos(pos, a):
 #------------------------------------------------------------------------------------------------------------~
 
 
-def plan_anti_policy(enemy_policy_cnts, n_iter, converge_epsilon, initQ=None, save_to_file=False):
+def plan_anti_policy(enemy_policy_cnts, n_iter, converge_epsilon, initQ=None, save_to_file=True):
 
     print('Planing counter policy')
     # set discount factor in [0,1]
