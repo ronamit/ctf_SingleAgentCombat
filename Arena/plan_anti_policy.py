@@ -106,8 +106,7 @@ def plan_anti_policy(enemy_policy_cnts, n_iter, converge_epsilon, initQ=None, sa
     # end for
 
     my_policy = {}
-    # derive optimal policy and save to file
-    # Policy improvement (use argmax):
+    # derive greedy policy with respect to  Q
     my_policy = derive_greedy_policy(qFunc)
 
     print('Finished planing counter policy')
