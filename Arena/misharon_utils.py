@@ -76,6 +76,7 @@ def get_Q_vals(qFunc, s):
 #------------------------------------------------------------------------------------------------------------~
 
 def derive_greedy_policy(qFunc):
+    # derive greedy policy with respect to  Q
     my_policy = {}
     for state in state_generator():
         if not is_terminal_state(state):
